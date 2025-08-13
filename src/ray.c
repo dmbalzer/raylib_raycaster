@@ -1,7 +1,7 @@
 #include "ray.h"
 #include <raymath.h>
 
-Vector2 get_ray(Vector2 pos, Vector2 ray_dir, int* map, int map_w, int map_h, int* horiz_hit) {
+Vector2 get_ray(Vector2 pos, Vector2 ray_dir, const int* map, int map_w, int map_h, int* horiz_hit) {
     /******************************************************
 	 * Horizontal Side Checks
 	 ******************************************************/

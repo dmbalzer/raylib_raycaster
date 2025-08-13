@@ -11,11 +11,11 @@
 #define MAP_H 20
 #define TILE_SIZE 24
 
-Vector2 pos = { 0 };
-Vector2 dir = { 0 };
-Vector2 plane = { 0 };
-Vector2 rays[SCREEN_W] = { 0 };
-int horiz_hits[SCREEN_W] = { 0 };
+static Vector2 pos = { 0 };
+static Vector2 dir = { 0 };
+static Vector2 plane = { 0 };
+static Vector2 rays[SCREEN_W] = { 0 };
+static int horiz_hits[SCREEN_W] = { 0 };
 
 static const int map[] = {
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
@@ -42,6 +42,7 @@ static const int map[] = {
 
 void update_rays(void);
 void draw_rays(void);
+void update_player(void);
 void draw_player(void);
 void draw_map(void);
 
@@ -56,23 +57,7 @@ int main(void) {
 
 	while ( !WindowShouldClose() ) {
 		update_rays();
-		
-		int right = (int)IsKeyDown(KEY_RIGHT);
-		int left = (int)IsKeyDown(KEY_LEFT);
-		int up = (int)IsKeyDown(KEY_UP);
-		int down = (int)IsKeyDown(KEY_DOWN);
-		
-		dir = Vector2Rotate(dir, (right - left) * GetFrameTime());
-		plane = Vector2Rotate(plane, (right - left) * GetFrameTime());
-		
-		Vector2 vel = Vector2Scale(dir, (up - down));
-		vel = Vector2Normalize(vel);
-		vel = Vector2Scale(dir, (up - down) * 4 * GetFrameTime());
-		/* Check x collision */
-		if ( map[(int)(pos.x + vel.x) + (int)pos.y * MAP_W] != 0 ) vel.x = 0;
-		/* Check y collision */
-		if ( map[(int)pos.x + (int)(pos.y + vel.y) * MAP_W] != 0 ) vel.y = 0;
-		pos = Vector2Add(pos, vel);
+		update_player();
 
 		BeginDrawing();
 		ClearBackground(BLACK);
@@ -100,6 +85,25 @@ void draw_rays(void) {
 	for ( int i = 0; i < SCREEN_W; i++ ) {
 		DrawLineEx(Vector2Scale(pos, TILE_SIZE), Vector2Scale(Vector2Add(pos, rays[i]), TILE_SIZE), 1, GREEN);
 	}
+}
+
+void update_player(void) {
+	int right = (int)IsKeyDown(KEY_RIGHT);
+	int left = (int)IsKeyDown(KEY_LEFT);
+	int up = (int)IsKeyDown(KEY_UP);
+	int down = (int)IsKeyDown(KEY_DOWN);
+	
+	dir = Vector2Rotate(dir, (right - left) * GetFrameTime());
+	plane = Vector2Rotate(plane, (right - left) * GetFrameTime());
+	
+	Vector2 vel = Vector2Scale(dir, (up - down));
+	vel = Vector2Normalize(vel);
+	vel = Vector2Scale(dir, (up - down) * 4 * GetFrameTime());
+	/* Check x collision */
+	if ( map[(int)(pos.x + vel.x) + (int)pos.y * MAP_W] != 0 ) vel.x = 0;
+	/* Check y collision */
+	if ( map[(int)pos.x + (int)(pos.y + vel.y) * MAP_W] != 0 ) vel.y = 0;
+	pos = Vector2Add(pos, vel);
 }
 
 void draw_player(void) {
