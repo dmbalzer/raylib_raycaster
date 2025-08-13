@@ -1,8 +1,8 @@
 SRC += src/*.c
 FLG += -std=c99
 FLG += -Wall
-LNK += -lSDL3
-BIN += raycaster
+LNK += -lraylib
+BIN += raylib_raycaster
 
 build:
 	gcc $(SRC) $(FLG) $(LNK) -o $(BIN)
