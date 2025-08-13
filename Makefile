@@ -1,4 +1,4 @@
-SRC += src/*.c
+SRC += src/main.c
 FLG += -std=c99
 FLG += -Wall
 LNK += -lraylib
